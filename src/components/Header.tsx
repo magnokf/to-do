@@ -5,8 +5,8 @@ import todoLogo from "../assets/rocket.svg";
 export function Header() {
 	return (
 		<header className={styles.header}>
-      <img
-        className={styles.logo}
+			<img
+				className={styles.logo}
 				src={todoLogo}
 				alt=""
 			/>

@@ -13,9 +13,9 @@
 	font-weight: 900;
 }
 .logoText span {
-	color: var(--purple-dark);
+	color: var(--blue);
 }
 /* second span */
 .logoText span:nth-child(2) {
-	color: var(--blue);
+	color: var(--purple-dark);
 }
