@@ -1,7 +1,15 @@
+import { ITask } from "../App";
 import { Task } from "./Task";
 import styles from "./Tasks.module.css";
 
-export function Tasks() {
+interface ITasksProps {
+	tasks: ITask[];
+}
+
+export function Tasks({ tasks }: ITasksProps) {
+	const numberOfCompletedTasks = tasks.filter(task => task.isCompleted).length;
+	const numberOfTasks = tasks.length;
+
 	return (
 		<section className={styles.tasks}>
 			<header className={styles.header}>
@@ -11,13 +19,18 @@ export function Tasks() {
 				</div>
 				<div>
 					<p className={styles.textPurple}>Concluídas</p>
-					<span>5 de 10</span>
+					<span>
+						{numberOfCompletedTasks} de {numberOfTasks}
+					</span>
 				</div>
 			</header>
 			<div className={styles.list}>
-				<Task />
-				<Task />
-				<Task />
+				{tasks.map(task => (
+					<Task
+						key={task.id}
+						task={task}
+					/>
+				))}
 			</div>
 		</section>
 	);
