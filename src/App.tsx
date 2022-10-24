@@ -1,76 +1,73 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Header } from "./components/Header";
-
 import { Tasks } from "./components/Tasks";
 
-import "./global.css";
+const LOCAL_STORAGE_KEY = "todo:savedTasks";
 
 export interface ITask {
-	id: number;
-	title: string;
-	isCompleted: boolean;
+  id: string;
+  title: string;
+  isCompleted: boolean;
 }
 
-export function App() {
-	const [tasks, setTasks] = useState<ITask[]>([]);
-	const [newTaskTitle, setNewTaskTitle] = useState("");
+function App() {
+  const [tasks, setTasks] = useState<ITask[]>([]);
 
-	function createNewTask(taskTitle: string) {
-		if (!newTaskTitle) return;
+  function loadSavedTasks() {
+    const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (saved) {
+      setTasks(JSON.parse(saved));
+    }
+  }
 
-		setTasks(oldState => [
-			...oldState,
-			{
-				id: Math.random(),
-				title: newTaskTitle,
-				isCompleted: false,
-			},
-		]);
-		setNewTaskTitle("");
-	}
+  useEffect(() => {
+    loadSavedTasks();
+  }, []);
 
-	function handleCreateNewTask() {
-		if (!newTaskTitle) return;
+  function setTasksAndSave(newTasks: ITask[]) {
+    setTasks(newTasks);
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newTasks));
+  }
 
-		const newTask = {
-			id: Math.random(),
-			title: newTaskTitle,
-			isCompleted: false,
-		};
+  function addTask(taskTitle: string) {
+    setTasksAndSave([
+      ...tasks,
+      {
+        id: crypto.randomUUID(),
+        title: taskTitle,
+        isCompleted: false,
+      },
+    ]);
+  }
 
-		setTasks(oldState => [...oldState, newTask]);
-		setNewTaskTitle("");
-	}
+  function deleteTaskById(taskId: string) {
+    const newTasks = tasks.filter((task) => task.id !== taskId);
+    setTasksAndSave(newTasks);
+  }
 
-	function handleToggleTaskCompletion(id: number) {
-		const updatedTasks = tasks.map(task =>
-			task.id === id
-				? {
-						...task,
-						isCompleted: !task.isCompleted,
-				  }
-				: task
-		);
+  function toggleTaskCompletedById(taskId: string) {
+    const newTasks = tasks.map((task) => {
+      if (task.id === taskId) {
+        return {
+          ...task,
+          isCompleted: !task.isCompleted,
+        };
+      }
+      return task;
+    });
+    setTasksAndSave(newTasks);
+  }
 
-		setTasks(updatedTasks);
-	}
-
-	function handleRemoveTask(id: number) {
-		const filteredTasks = tasks.filter(task => task.id !== id);
-
-		setTasks(filteredTasks);
-	}
-
-	return (
-		<div className="App">
-			<>
-				<Header
-					setNewTaskTitle={createNewTask}
-					newTaskTitle={""}
-					handleCreateNewTask={handleCreateNewTask}
-				/>
-				<Tasks tasks={tasks} />
-			</>
-		</div>
-	);
+  return (
+    <>
+      <Header onAddTask={addTask} />
+      <Tasks
+        tasks={tasks}
+        onDelete={deleteTaskById}
+        onComplete={toggleTaskCompletedById}
+      />
+    </>
+  );
 }
+
+export default App;
