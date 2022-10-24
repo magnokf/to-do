@@ -15,7 +15,7 @@ export function Tasks({ tasks }: ITasksProps) {
 			<header className={styles.header}>
 				<div>
 					<p>Minhas tarefas</p>
-					<span>10</span>
+					<span>{tasks.length}</span>
 				</div>
 				<div>
 					<p className={styles.textPurple}>Concluídas</p>
