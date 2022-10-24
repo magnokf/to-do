@@ -24,28 +24,29 @@ function App() {
     loadSavedTasks();
   }, []);
 
-  function setTasksAndSave(newTasks: ITask[]) {
+  function setTasksAndSaveLocalStorage(newTasks: ITask[]) {
     setTasks(newTasks);
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newTasks));
   }
 
-  function addTask(taskTitle: string) {
-    setTasksAndSave([
+  function createNewTask(taskTitle: string) {
+    setTasksAndSaveLocalStorage([
       ...tasks,
       {
-        id: crypto.randomUUID(),
+        //random id
+        id: Math.random().toString(36).substr(2, 9),
         title: taskTitle,
         isCompleted: false,
       },
     ]);
   }
 
-  function deleteTaskById(taskId: string) {
+  function handleRemoveTaskById(taskId: string) {
     const newTasks = tasks.filter((task) => task.id !== taskId);
-    setTasksAndSave(newTasks);
+    setTasksAndSaveLocalStorage(newTasks);
   }
 
-  function toggleTaskCompletedById(taskId: string) {
+  function handleToggleTaskCompletedById(taskId: string) {
     const newTasks = tasks.map((task) => {
       if (task.id === taskId) {
         return {
@@ -55,16 +56,16 @@ function App() {
       }
       return task;
     });
-    setTasksAndSave(newTasks);
+    setTasksAndSaveLocalStorage(newTasks);
   }
 
   return (
     <>
-      <Header onAddTask={addTask} />
+      <Header oncreateNewTask={createNewTask} />
       <Tasks
         tasks={tasks}
-        onDelete={deleteTaskById}
-        onComplete={toggleTaskCompletedById}
+        onDelete={handleRemoveTaskById}
+        onComplete={handleToggleTaskCompletedById}
       />
     </>
   );

@@ -11,7 +11,7 @@ interface Props {
 
 export function Tasks({ tasks, onComplete, onDelete }: Props) {
   const tasksQuantity = tasks.length;
-  const completedTasks = tasks.filter((task) => task.isCompleted).length;
+  const setCompletedTasks = tasks.filter((task) => task.isCompleted).length;
 
   return (
     <section className={styles.tasks}>
@@ -24,7 +24,7 @@ export function Tasks({ tasks, onComplete, onDelete }: Props) {
         <div>
           <p className={styles.textPurple}>Concluídas</p>
           <span>
-            {completedTasks} de {tasksQuantity}
+            {setCompletedTasks} de {tasksQuantity}
           </span>
         </div>
       </header>

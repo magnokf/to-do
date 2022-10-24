@@ -4,16 +4,16 @@ import styles from "./header.module.css";
 import { ChangeEvent, FormEvent, useState } from "react";
 
 interface Props {
-  onAddTask: (taskTitle: string) => void;
+  oncreateNewTask: (taskTitle: string) => void;
 }
 
-export function Header({ onAddTask }: Props) {
+export function Header({ oncreateNewTask }: Props) {
   const [title, setTitle] = useState("");
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    onAddTask(title);
+    oncreateNewTask(title);
     setTitle("");
   }
 
